@@ -1,16 +1,9 @@
-# trophy_tracker
+# Trophy Tracker
 
-A new Flutter project.
+View trophies with attached guide for your favorite games
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Trophy information
 
-A few resources to get you started if this is your first Flutter project:
+all information is taken from <a href="https://psnprofiles.com/" target="_blank">psnprofiles.com</a>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
