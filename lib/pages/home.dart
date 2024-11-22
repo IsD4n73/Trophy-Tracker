@@ -50,11 +50,32 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  _search() async {
+    BotToast.showLoading();
+    pagingController.itemList = null;
+    var searchDetails = await SearchGameController.search(search.text, 1);
+    BotToast.closeAllLoading();
+
+    if (searchDetails == null) {
+      BotToast.showText(
+          text: "Something went wrong during the search, please try again");
+      return;
+    }
+
+    if (searchDetails.maxPage == 1) {
+      pagingController.appendLastPage(searchDetails.results);
+    } else {
+      pagingController.appendPage(searchDetails.results, 2);
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("trophy Tracker"),
+        title: const Text("Trophy Tracker"),
         centerTitle: true,
       ),
       body: Padding(
@@ -64,6 +85,9 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 15),
             TextField(
               controller: search,
+              onSubmitted: (value) async {
+                await _search();
+              },
               decoration: InputDecoration(
                 labelText: "Search Games",
                 border: OutlineInputBorder(
@@ -71,26 +95,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 suffixIcon: IconButton(
                   onPressed: () async {
-                    BotToast.showLoading();
-                    pagingController.itemList = null;
-                    var searchDetails =
-                        await SearchGameController.search(search.text, 1);
-                    BotToast.closeAllLoading();
-
-                    if (searchDetails == null) {
-                      BotToast.showText(
-                          text:
-                              "Something went wrong during the search, please try again");
-                      return;
-                    }
-
-                    if (searchDetails.maxPage == 1) {
-                      pagingController.appendLastPage(searchDetails.results);
-                    } else {
-                      pagingController.appendPage(searchDetails.results, 2);
-                    }
-
-                    setState(() {});
+                    await _search();
                   },
                   icon: const Icon(Icons.search),
                 ),

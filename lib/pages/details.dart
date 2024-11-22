@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/details_game_controller.dart';
 import 'package:trophy_tracker/model/game_model.dart';
 import 'package:trophy_tracker/model/search_model.dart';
@@ -15,6 +16,8 @@ class GameDetailsPage extends StatefulWidget {
 class _GameDetailsPageState extends State<GameDetailsPage> {
   GameModel? details;
 
+  List<String> doneTrophy = [];
+
   @override
   void initState() {
     Future.delayed(
@@ -29,6 +32,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               text:
                   "Something went wrong when loading the data, please try again");
         }
+        doneTrophy = await DatabaseController.getDoneTrophy();
         BotToast.closeAllLoading();
       },
     );
@@ -39,7 +43,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("trophy Tracker"),
+        title: const Text("Trophy Tracker"),
         centerTitle: true,
       ),
       body: details == null
@@ -129,33 +133,75 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     itemBuilder: (context, index) {
                       var trophy = details!.trophyes[index];
 
+                      Widget widget = SizedBox.shrink();
                       if (trophy.guide != null && trophy.guide!.isNotEmpty) {
-                        return ExpansionTile(
-                          title: Text(trophy.name),
-                          subtitle: Text(
-                            "${trophy.description}\n\nRarity: ${trophy.rarity}",
-                            softWrap: true,
+                        widget = Dismissible(
+                          key: Key(trophy.name),
+                          confirmDismiss: (direction) async {
+                            if (direction == DismissDirection.endToStart) {
+                              DatabaseController.markTrophyAsNotDone(trophy);
+                            } else {
+                              DatabaseController.markTrophyAsDone(trophy);
+                            }
+
+                            doneTrophy =
+                                await DatabaseController.getDoneTrophy();
+
+                            setState(() {});
+                            return false;
+                          },
+                          child: ExpansionTile(
+                            title: Text(trophy.name),
+                            subtitle: Text(
+                              "${trophy.description}\n\nRarity: ${trophy.rarity}",
+                              softWrap: true,
+                            ),
+                            leading: Image.network(trophy.image),
+                            trailing: Image.network(trophy.type),
+                            children: [
+                              const SizedBox(height: 10),
+                              const Divider(),
+                              Text(trophy.guide!),
+                              const SizedBox(height: 10),
+                            ],
                           ),
-                          leading: Image.network(trophy.image),
-                          trailing: Image.network(trophy.type),
-                          children: [
-                            const SizedBox(height: 10),
-                            const Divider(),
-                            Text(trophy.guide!),
-                            const SizedBox(height: 10),
-                          ],
+                        );
+                      } else {
+                        widget = Dismissible(
+                          key: Key(trophy.name),
+                          confirmDismiss: (direction) async {
+                            if (direction == DismissDirection.endToStart) {
+                              DatabaseController.markTrophyAsNotDone(trophy);
+                            } else {
+                              DatabaseController.markTrophyAsDone(trophy);
+                            }
+                            doneTrophy =
+                                await DatabaseController.getDoneTrophy();
+
+                            setState(() {});
+
+                            return false;
+                          },
+                          child: ListTile(
+                            title: Text(trophy.name),
+                            subtitle: Text(
+                              "${trophy.description}\n\nRarity: ${trophy.rarity}",
+                              softWrap: true,
+                            ),
+                            leading: Image.network(trophy.image),
+                            trailing: Image.network(trophy.type),
+                          ),
                         );
                       }
 
-                      return ListTile(
-                        title: Text(trophy.name),
-                        subtitle: Text(
-                          "${trophy.description}\n\nRarity: ${trophy.rarity}",
-                          softWrap: true,
-                        ),
-                        leading: Image.network(trophy.image),
-                        trailing: Image.network(trophy.type),
-                      );
+                      return doneTrophy.contains(trophy.name)
+                          ? Banner(
+                              message: "Done",
+                              location: BannerLocation.topEnd,
+                              color: Colors.green,
+                              child: widget,
+                            )
+                          : widget;
                     },
                   ),
                 ],

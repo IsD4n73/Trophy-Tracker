@@ -54,7 +54,7 @@ class DetailsGameController {
         ?.replaceAll("background-image: url(", "")
         .replaceAll(")", "");
 
-    List<trophyModel> trophyes = [];
+    List<TrophyModel> trophyes = [];
 
     var trophyesDivs = htmlDocument.querySelectorAll(".box.section-holder");
     for (var trophy in trophyesDivs) {
@@ -74,7 +74,7 @@ class DetailsGameController {
           ?.trim();
 
       if (name != null && description != null) {
-        trophyes.add(trophyModel(
+        trophyes.add(TrophyModel(
           name,
           description,
           type,

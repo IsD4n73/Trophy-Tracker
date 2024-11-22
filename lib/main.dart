@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/pages/home.dart';
 import 'package:bot_toast/bot_toast.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseController.initDb();
+
   runApp(const MyApp());
 }
 

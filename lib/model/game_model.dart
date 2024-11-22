@@ -11,7 +11,7 @@ class GameModel {
   final String background;
   final int playthroughs;
 
-  final List<trophyModel> trophyes;
+  final List<TrophyModel> trophyes;
 
   GameModel(
       this.trophyCount,
