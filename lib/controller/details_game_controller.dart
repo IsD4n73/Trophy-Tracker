@@ -74,14 +74,17 @@ class DetailsGameController {
           ?.trim();
 
       if (name != null && description != null) {
-        trophyes.add(TrophyModel(
-          name,
-          description,
-          type,
-          image ?? "",
-          rarity ?? "N/A",
-          removeAllHtmlTags(guide ?? ""),
-        ));
+        trophyes.add(
+          TrophyModel(
+            name,
+            description,
+            type,
+            image ?? "",
+            rarity ?? "N/A",
+            //removeAllHtmlTags(guide ?? ""),
+            guide ?? "",
+          ),
+        );
       }
     }
 

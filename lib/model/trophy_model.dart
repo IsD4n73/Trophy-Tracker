@@ -31,6 +31,6 @@ class TrophyModel {
 
   @override
   String toString() {
-    return 'TrophyModel{name: $name, description: $description, type: $type, image: $image, rarity: $rarity, guide: $guide}';
+    return 'TrophyModel{name: $name, description: $description, type: $type, image: $image, rarity: $rarity}';
   }
 }

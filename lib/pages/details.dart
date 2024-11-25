@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/details_game_controller.dart';
 import 'package:trophy_tracker/model/game_model.dart';
@@ -184,7 +185,16 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                             children: [
                               const SizedBox(height: 10),
                               const Divider(),
-                              Text(trophy.guide!),
+                              HtmlWidget(
+                                trophy.guide!,
+                                customWidgetBuilder: (element) {
+                                  if (element.outerHtml.contains("<a")) {
+                                    return Text(element.innerHtml);
+                                  }
+                                  return null;
+                                },
+                              ),
+                              //Text(trophy.guide!),
                               const SizedBox(height: 10),
                             ],
                           ),
