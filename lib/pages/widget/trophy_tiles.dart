@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:trophy_tracker/model/trophy_model.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../controller/database_controller.dart';
 
@@ -63,11 +64,9 @@ class TrophyTiles extends StatelessWidget {
             const Divider(),
             HtmlWidget(
               trophy.guide!,
-              customWidgetBuilder: (element) {
-                if (element.outerHtml.contains("<a")) {
-                  return Text(element.innerHtml);
-                }
-                return null;
+              onTapUrl: (url) async {
+                await launchUrlString(url);
+                return true;
               },
             ),
             //Text(trophy.guide!),

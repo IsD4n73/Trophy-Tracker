@@ -43,6 +43,7 @@ dependencies:
   infinite_scroll_pagination: ^4.1.0
   sembast: ^3.7.5+2
   flutter_widget_from_html_core: ^0.15.2
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
