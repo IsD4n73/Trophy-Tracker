@@ -106,7 +106,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     ),
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "Trophies: ${doneTrophy.length}/${details!.trophyCount}",
+                      "Trophies: ${doneTrophy.length}/${details!.trophyes.length}",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
