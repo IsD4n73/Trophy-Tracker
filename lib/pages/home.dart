@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController search = TextEditingController();
+  bool needToLoadOther = true;
 
   final PagingController<int, SearchModel> pagingController =
       PagingController(firstPageKey: 0);
@@ -23,6 +24,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     pagingController.addPageRequestListener((pageKey) async {
+      if (!needToLoadOther) {
+        return;
+      }
+
       BotToast.showLoading();
       final newItems = await SearchGameController.search(search.text, pageKey);
 
@@ -63,8 +68,10 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (searchDetails.maxPage == 1) {
+      needToLoadOther = false;
       pagingController.appendLastPage(searchDetails.results);
     } else {
+      needToLoadOther = true;
       pagingController.appendPage(searchDetails.results, 2);
     }
 
