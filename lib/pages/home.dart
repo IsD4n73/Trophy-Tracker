@@ -103,7 +103,19 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 15),
             pagingController.itemList == null
-                ? const SizedBox.shrink()
+                ? Column(
+                    children: [
+                      const SizedBox(height: 100),
+                      Text("POWERED BY PSNProfiles.com"),
+                      const SizedBox(height: 20),
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                          "https://pbs.twimg.com/profile_images/676408953287278593/DmVW8OUU_400x400.png",
+                        ),
+                      ),
+                    ],
+                  )
                 : Flexible(
                     child: PagedListView<int, SearchModel>(
                       shrinkWrap: true,
