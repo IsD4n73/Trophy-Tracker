@@ -139,9 +139,10 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                           key: Key(trophy.name),
                           confirmDismiss: (direction) async {
                             if (direction == DismissDirection.endToStart) {
-                              DatabaseController.markTrophyAsNotDone(trophy);
+                              await DatabaseController.markTrophyAsNotDone(
+                                  trophy);
                             } else {
-                              DatabaseController.markTrophyAsDone(trophy);
+                              await DatabaseController.markTrophyAsDone(trophy);
                             }
 
                             doneTrophy =
@@ -171,9 +172,10 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                           key: Key(trophy.name),
                           confirmDismiss: (direction) async {
                             if (direction == DismissDirection.endToStart) {
-                              DatabaseController.markTrophyAsNotDone(trophy);
+                              await DatabaseController.markTrophyAsNotDone(
+                                  trophy);
                             } else {
-                              DatabaseController.markTrophyAsDone(trophy);
+                              await DatabaseController.markTrophyAsDone(trophy);
                             }
                             doneTrophy =
                                 await DatabaseController.getDoneTrophy();
