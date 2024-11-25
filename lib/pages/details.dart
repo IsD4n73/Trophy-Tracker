@@ -121,6 +121,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     ),
                   ),
                   Text("Click on the trophy to show the guide (if available)"),
+                  Text("Swipe to mark the trophy as done/not done"),
                   const SizedBox(height: 15),
                   ListView.separated(
                     itemCount: details!.trophyes.length,
@@ -137,8 +138,29 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       if (trophy.guide != null && trophy.guide!.isNotEmpty) {
                         widget = Dismissible(
                           key: Key(trophy.name),
+                          background: Container(
+                            color: doneTrophy.contains(trophy.name)
+                                ? Colors.red
+                                : Colors.green,
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  doneTrophy.contains(trophy.name)
+                                      ? Icons.close
+                                      : Icons.done,
+                                ),
+                                Icon(
+                                  doneTrophy.contains(trophy.name)
+                                      ? Icons.close
+                                      : Icons.done,
+                                ),
+                              ],
+                            ),
+                          ),
                           confirmDismiss: (direction) async {
-                            if (direction == DismissDirection.endToStart) {
+                            if (doneTrophy.contains(trophy.name)) {
                               await DatabaseController.markTrophyAsNotDone(
                                   trophy);
                             } else {
@@ -170,13 +192,35 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       } else {
                         widget = Dismissible(
                           key: Key(trophy.name),
+                          background: Container(
+                            color: doneTrophy.contains(trophy.name)
+                                ? Colors.red
+                                : Colors.green,
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  doneTrophy.contains(trophy.name)
+                                      ? Icons.close
+                                      : Icons.done,
+                                ),
+                                Icon(
+                                  doneTrophy.contains(trophy.name)
+                                      ? Icons.close
+                                      : Icons.done,
+                                ),
+                              ],
+                            ),
+                          ),
                           confirmDismiss: (direction) async {
-                            if (direction == DismissDirection.endToStart) {
+                            if (doneTrophy.contains(trophy.name)) {
                               await DatabaseController.markTrophyAsNotDone(
                                   trophy);
                             } else {
                               await DatabaseController.markTrophyAsDone(trophy);
                             }
+
                             doneTrophy =
                                 await DatabaseController.getDoneTrophy();
 
