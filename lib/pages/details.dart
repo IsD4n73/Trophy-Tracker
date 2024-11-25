@@ -5,6 +5,7 @@ import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/details_game_controller.dart';
 import 'package:trophy_tracker/model/game_model.dart';
 import 'package:trophy_tracker/model/search_model.dart';
+import 'package:trophy_tracker/pages/widget/trophy_tiles.dart';
 
 class GameDetailsPage extends StatefulWidget {
   final SearchModel game;
@@ -135,129 +136,14 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     itemBuilder: (context, index) {
                       var trophy = details!.trophyes[index];
 
-                      Widget widget = SizedBox.shrink();
-                      if (trophy.guide != null && trophy.guide!.isNotEmpty) {
-                        widget = Dismissible(
-                          key: Key(trophy.name),
-                          background: Container(
-                            color: doneTrophy.contains(trophy.name)
-                                ? Colors.red
-                                : Colors.green,
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Icon(
-                                  doneTrophy.contains(trophy.name)
-                                      ? Icons.close
-                                      : Icons.done,
-                                ),
-                                Icon(
-                                  doneTrophy.contains(trophy.name)
-                                      ? Icons.close
-                                      : Icons.done,
-                                ),
-                              ],
-                            ),
-                          ),
-                          confirmDismiss: (direction) async {
-                            if (doneTrophy.contains(trophy.name)) {
-                              await DatabaseController.markTrophyAsNotDone(
-                                  trophy);
-                            } else {
-                              await DatabaseController.markTrophyAsDone(trophy);
-                            }
-
-                            doneTrophy =
-                                await DatabaseController.getDoneTrophy();
-
-                            setState(() {});
-                            return false;
-                          },
-                          child: ExpansionTile(
-                            title: Text(trophy.name),
-                            subtitle: Text(
-                              "${trophy.description}\n\nRarity: ${trophy.rarity}",
-                              softWrap: true,
-                            ),
-                            leading: Image.network(trophy.image),
-                            trailing: Image.network(trophy.type),
-                            children: [
-                              const SizedBox(height: 10),
-                              const Divider(),
-                              HtmlWidget(
-                                trophy.guide!,
-                                customWidgetBuilder: (element) {
-                                  if (element.outerHtml.contains("<a")) {
-                                    return Text(element.innerHtml);
-                                  }
-                                  return null;
-                                },
-                              ),
-                              //Text(trophy.guide!),
-                              const SizedBox(height: 10),
-                            ],
-                          ),
-                        );
-                      } else {
-                        widget = Dismissible(
-                          key: Key(trophy.name),
-                          background: Container(
-                            color: doneTrophy.contains(trophy.name)
-                                ? Colors.red
-                                : Colors.green,
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Icon(
-                                  doneTrophy.contains(trophy.name)
-                                      ? Icons.close
-                                      : Icons.done,
-                                ),
-                                Icon(
-                                  doneTrophy.contains(trophy.name)
-                                      ? Icons.close
-                                      : Icons.done,
-                                ),
-                              ],
-                            ),
-                          ),
-                          confirmDismiss: (direction) async {
-                            if (doneTrophy.contains(trophy.name)) {
-                              await DatabaseController.markTrophyAsNotDone(
-                                  trophy);
-                            } else {
-                              await DatabaseController.markTrophyAsDone(trophy);
-                            }
-
-                            doneTrophy =
-                                await DatabaseController.getDoneTrophy();
-
-                            setState(() {});
-
-                            return false;
-                          },
-                          child: ListTile(
-                            title: Text(trophy.name),
-                            subtitle: Text(
-                              "${trophy.description}\n\nRarity: ${trophy.rarity}",
-                              softWrap: true,
-                            ),
-                            leading: Image.network(trophy.image),
-                            trailing: Image.network(trophy.type),
-                          ),
-                        );
-                      }
-
-                      return doneTrophy.contains(trophy.name)
-                          ? Banner(
-                              message: "Done",
-                              location: BannerLocation.topEnd,
-                              color: Colors.green,
-                              child: widget,
-                            )
-                          : widget;
+                      return TrophyTiles(
+                        done: doneTrophy.contains(trophy.name),
+                        trophy: trophy,
+                        onUpdate: () async {
+                          doneTrophy = await DatabaseController.getDoneTrophy();
+                          setState(() {});
+                        },
+                      );
                     },
                   ),
                 ],
