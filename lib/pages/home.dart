@@ -15,13 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController search = TextEditingController();
   bool needToLoadOther = true;
-
+  String searchCount = "";
   final PagingController<int, SearchModel> pagingController =
       PagingController(firstPageKey: 0);
 
   @override
   void initState() {
     super.initState();
+
+    searchCount = "";
 
     pagingController.addPageRequestListener((pageKey) async {
       if (!needToLoadOther) {
@@ -34,11 +36,17 @@ class _HomePageState extends State<HomePage> {
       if (newItems == null) {
         pagingController.error =
             "Something went wrong during the search, please try again";
+        searchCount = "";
+        setState(() {});
         BotToast.closeAllLoading();
         return;
       }
 
+      print(newItems.maxPage);
+      print(pageKey);
+
       final isLastPage = pageKey >= newItems.maxPage;
+      print(isLastPage);
       if (isLastPage) {
         pagingController.appendLastPage(newItems.results);
       } else {
@@ -67,6 +75,8 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
+    searchCount = searchDetails.resultCount;
+
     if (searchDetails.maxPage == 1) {
       needToLoadOther = false;
       pagingController.appendLastPage(searchDetails.results);
@@ -82,7 +92,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Trophy Tracker"),
+        title: Text(searchCount != "" ? searchCount : "Trophy Tracker"),
         centerTitle: true,
       ),
       body: Padding(

@@ -42,6 +42,9 @@ class SearchGameController {
       return null;
     }
 
+    String resultCount =
+        htmlDocument.getElementById('result-count')?.innerText ?? '';
+
     List<SearchModel> results = [];
 
     for (var game in games) {
@@ -59,6 +62,6 @@ class SearchGameController {
       }
     }
 
-    return SearchDetails(int.parse(maxPage ?? "1"), results);
+    return SearchDetails(int.parse(maxPage ?? "1"), results, resultCount);
   }
 }
