@@ -1,6 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/details_game_controller.dart';
 import 'package:trophy_tracker/model/game_model.dart';
@@ -34,7 +33,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               text:
                   "Something went wrong when loading the data, please try again");
         }
-        doneTrophy = await DatabaseController.getDoneTrophy();
+        doneTrophy = await DatabaseController.getDoneTrophy(
+            widget.game.title.replaceAll(" ", ""));
         BotToast.closeAllLoading();
       },
     );
@@ -106,7 +106,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     ),
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "Trophies: ${details!.trophyCount}",
+                      "Trophies: ${doneTrophy.length}/${details!.trophyCount}",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
@@ -139,8 +139,10 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       return TrophyTiles(
                         done: doneTrophy.contains(trophy.name),
                         trophy: trophy,
+                        gameName: widget.game.title.replaceAll(" ", ""),
                         onUpdate: () async {
-                          doneTrophy = await DatabaseController.getDoneTrophy();
+                          doneTrophy = await DatabaseController.getDoneTrophy(
+                              widget.game.title.replaceAll(" ", ""));
                           setState(() {});
                         },
                       );

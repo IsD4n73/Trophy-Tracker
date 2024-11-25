@@ -14,12 +14,15 @@ class DatabaseController {
     database = await databaseFactoryIo.openDatabase(dbPath);
   }
 
-  static Future<List<String>> getDoneTrophy() async {
+  static Future<List<String>> getDoneTrophy(String gameName) async {
     var store = StoreRef.main();
 
-    var encodedSource =
-        (await store.record('completedtrophy').get(database) as String?) ??
-            '{"list" : []}';
+    print("Salvataggio trofei in: $gameName");
+
+    var encodedSource = (await store
+            .record('$gameName-completedtrophy')
+            .get(database) as String?) ??
+        '{"list" : []}';
 
     var trophyJson = jsonDecode(encodedSource);
 
@@ -30,12 +33,16 @@ class DatabaseController {
     return doneTrophy.map((e) => e.name).toList();
   }
 
-  static Future<void> markTrophyAsDone(TrophyModel trophy) async {
+  static Future<void> markTrophyAsDone(
+      TrophyModel trophy, String gameName) async {
+    print("mark as done in: ${trophy.name.replaceAll(" ", "")}");
+
     var store = StoreRef.main();
 
-    var encodedSource =
-        (await store.record('completedtrophy').get(database) as String?) ??
-            '{"list" : []}';
+    var encodedSource = (await store
+            .record('$gameName-completedtrophy')
+            .get(database) as String?) ??
+        '{"list" : []}';
 
     var trophyJson = jsonDecode(encodedSource);
 
@@ -52,15 +59,19 @@ class DatabaseController {
     doneTrophy.add(trophy);
     var jsoned = {"list": doneTrophy.map((e) => e.toJson()).toList()};
 
-    await store.record('completedtrophy').put(database, jsonEncode(jsoned));
+    await store
+        .record('$gameName-completedtrophy')
+        .put(database, jsonEncode(jsoned));
   }
 
-  static Future<void> markTrophyAsNotDone(TrophyModel trophy) async {
+  static Future<void> markTrophyAsNotDone(
+      TrophyModel trophy, String gameName) async {
     var store = StoreRef.main();
 
-    var encodedSource =
-        (await store.record('completedtrophy').get(database) as String?) ??
-            '{"list" : []}';
+    var encodedSource = (await store
+            .record('$gameName-completedtrophy')
+            .get(database) as String?) ??
+        '{"list" : []}';
 
     var trophyJson = jsonDecode(encodedSource);
 
@@ -72,6 +83,8 @@ class DatabaseController {
 
     var jsoned = {"list": doneTrophy.map((e) => e.toJson()).toList()};
 
-    await store.record('completedtrophy').put(database, jsonEncode(jsoned));
+    await store
+        .record('$gameName-completedtrophy')
+        .put(database, jsonEncode(jsoned));
   }
 }

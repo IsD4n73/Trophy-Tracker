@@ -7,6 +7,7 @@ import '../../controller/database_controller.dart';
 class TrophyTiles extends StatelessWidget {
   final bool done;
   final TrophyModel trophy;
+  final String gameName;
 
   final Function() onUpdate;
 
@@ -14,7 +15,8 @@ class TrophyTiles extends StatelessWidget {
       {super.key,
       required this.done,
       required this.trophy,
-      required this.onUpdate});
+      required this.onUpdate,
+      required this.gameName});
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +42,9 @@ class TrophyTiles extends StatelessWidget {
         ),
         confirmDismiss: (direction) async {
           if (done) {
-            await DatabaseController.markTrophyAsNotDone(trophy);
+            await DatabaseController.markTrophyAsNotDone(trophy, gameName);
           } else {
-            await DatabaseController.markTrophyAsDone(trophy);
+            await DatabaseController.markTrophyAsDone(trophy, gameName);
           }
 
           await onUpdate();
@@ -93,9 +95,9 @@ class TrophyTiles extends StatelessWidget {
         ),
         confirmDismiss: (direction) async {
           if (done) {
-            await DatabaseController.markTrophyAsNotDone(trophy);
+            await DatabaseController.markTrophyAsNotDone(trophy, gameName);
           } else {
-            await DatabaseController.markTrophyAsDone(trophy);
+            await DatabaseController.markTrophyAsDone(trophy, gameName);
           }
 
           await onUpdate();
