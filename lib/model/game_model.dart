@@ -11,7 +11,7 @@ class GameModel {
   final String difficulty;
   final String background;
   final int playthroughs;
-
+  final List<String> tags;
   final List<TrophyModel> trophyes;
 
   GameModel(
@@ -25,5 +25,6 @@ class GameModel {
     this.playthroughs,
     this.trophyes,
     this.background,
+    this.tags,
   );
 }

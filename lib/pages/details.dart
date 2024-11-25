@@ -74,7 +74,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     ),
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "Trophies: ${doneTrophy.length}/${details!.trophyes.length}",
+                      "Trophies: ${doneTrophy.length}/${details!.trophyCount}",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
@@ -84,6 +84,18 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     gold: details!.goldCount.toString(),
                     silver: details!.silverCount.toString(),
                     bronze: details!.bronzeCount.toString(),
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      "Tags:\n${details!.tags.join(" - ")}",
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 15),
                   const Divider(

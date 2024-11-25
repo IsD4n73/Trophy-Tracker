@@ -56,7 +56,14 @@ class DetailsGameController {
         ?.replaceAll("background-image: url(", "")
         .replaceAll(")", "");
 
+    List<String> tags = [];
     List<TrophyModel> trophyes = [];
+
+    var tagsHtml = htmlDocument.querySelectorAll("td > span.tag");
+
+    for (var tag in tagsHtml) {
+      tags.add(tag.innerText);
+    }
 
     var trophyesDivs = htmlDocument.querySelectorAll(".box.section-holder");
     for (var trophy in trophyesDivs) {
@@ -105,6 +112,7 @@ class DetailsGameController {
       int.parse(playthroughs ?? "0"),
       trophyes,
       background ?? "",
+      tags,
     );
   }
 }
