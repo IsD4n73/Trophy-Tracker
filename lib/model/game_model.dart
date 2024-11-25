@@ -5,6 +5,7 @@ class GameModel {
   final int goldCount;
   final int bronzeCount;
   final int silverCount;
+  final int platinumCount;
 
   final int hours;
   final String difficulty;
@@ -14,13 +15,15 @@ class GameModel {
   final List<TrophyModel> trophyes;
 
   GameModel(
-      this.trophyCount,
-      this.goldCount,
-      this.bronzeCount,
-      this.silverCount,
-      this.hours,
-      this.difficulty,
-      this.playthroughs,
-      this.trophyes,
-      this.background);
+    this.trophyCount,
+    this.platinumCount,
+    this.goldCount,
+    this.bronzeCount,
+    this.silverCount,
+    this.hours,
+    this.difficulty,
+    this.playthroughs,
+    this.trophyes,
+    this.background,
+  );
 }

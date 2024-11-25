@@ -4,6 +4,9 @@ import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/details_game_controller.dart';
 import 'package:trophy_tracker/model/game_model.dart';
 import 'package:trophy_tracker/model/search_model.dart';
+import 'package:trophy_tracker/pages/widget/game_banner.dart';
+import 'package:trophy_tracker/pages/widget/game_info.dart';
+import 'package:trophy_tracker/pages/widget/trophy_recap.dart';
 import 'package:trophy_tracker/pages/widget/trophy_tiles.dart';
 
 class GameDetailsPage extends StatefulWidget {
@@ -53,50 +56,15 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Image.network(
-                        details!.background,
-                        fit: BoxFit.cover,
-                      ),
-                      Center(
-                        child: Text(
-                          widget.game.title,
-                          softWrap: true,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                              backgroundColor: Colors.black38),
-                        ),
-                      ),
-                    ],
+                  GameBanner(
+                    title: widget.game.title,
+                    background: details!.background,
                   ),
                   const SizedBox(height: 15),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Difficulty: \n${details!.difficulty}",
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "Playthroughs:\n${details!.playthroughs}",
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "Hours: \n${details!.hours}",
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+                  GameInfo(
+                    difficulty: details!.difficulty,
+                    playthroughs: details!.playthroughs.toString(),
+                    hours: details!.hours.toString(),
                   ),
                   const SizedBox(height: 15),
                   Container(
@@ -109,6 +77,13 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       "Trophies: ${doneTrophy.length}/${details!.trophyes.length}",
                       style: TextStyle(color: Colors.black),
                     ),
+                  ),
+                  const SizedBox(height: 15),
+                  TrophyRecap(
+                    platinum: details!.platinumCount.toString(),
+                    gold: details!.goldCount.toString(),
+                    silver: details!.silverCount.toString(),
+                    bronze: details!.bronzeCount.toString(),
                   ),
                   const SizedBox(height: 15),
                   const Divider(

@@ -23,6 +23,8 @@ class DetailsGameController {
 
     final htmlDocument = parseHtmlDocument(response.data);
 
+    var platinumCount =
+        htmlDocument.querySelector("ul > li.icon-sprite.platinum")?.innerHtml;
     var goldCount =
         htmlDocument.querySelector("ul > li.icon-sprite.gold")?.innerHtml;
     var bronzeCount =
@@ -94,6 +96,7 @@ class DetailsGameController {
 
     return GameModel(
       int.parse(trophyCount ?? "0"),
+      int.parse(platinumCount ?? "0"),
       int.parse(goldCount ?? "0"),
       int.parse(bronzeCount ?? "0"),
       int.parse(silverCount ?? "0"),
