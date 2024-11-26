@@ -4,9 +4,11 @@ import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/details_game_controller.dart';
 import 'package:trophy_tracker/model/game_model.dart';
 import 'package:trophy_tracker/model/search_model.dart';
+import 'package:trophy_tracker/model/trophy_model.dart';
 import 'package:trophy_tracker/pages/widget/game_banner.dart';
 import 'package:trophy_tracker/pages/widget/game_info.dart';
 import 'package:trophy_tracker/pages/widget/trophy_recap.dart';
+import 'package:trophy_tracker/pages/widget/trophy_search.dart';
 import 'package:trophy_tracker/pages/widget/trophy_tiles.dart';
 
 class GameDetailsPage extends StatefulWidget {
@@ -20,6 +22,8 @@ class GameDetailsPage extends StatefulWidget {
 class _GameDetailsPageState extends State<GameDetailsPage> {
   GameModel? details;
 
+  List<TrophyModel> filterTrophyList = [];
+
   List<String> doneTrophy = [];
 
   @override
@@ -29,6 +33,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       () async {
         BotToast.showLoading();
         details = await DetailsGameController.getGameDetails(widget.game.link);
+
         setState(() {});
 
         if (details == null) {
@@ -36,6 +41,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               text:
                   "Something went wrong when loading the data, please try again");
         }
+        filterTrophyList = details!.trophyes;
         doneTrophy = await DatabaseController.getDoneTrophy(
             widget.game.title.replaceAll(" ", ""));
         BotToast.closeAllLoading();
@@ -112,8 +118,29 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                   Text("Click on the trophy to show the guide (if available)"),
                   Text("Swipe to mark the trophy as done/not done"),
                   const SizedBox(height: 15),
+                  TrophySearch(
+                    onSearched: (query) {
+                      if (query.isEmpty || query == '') {
+                        filterTrophyList = details!.trophyes;
+                      } else {
+                        filterTrophyList = details!.trophyes.where(
+                          (element) {
+                            return element.name
+                                    .toLowerCase()
+                                    .contains(query.toLowerCase()) ||
+                                element.description
+                                    .toLowerCase()
+                                    .contains(query.toLowerCase());
+                          },
+                        ).toList();
+                      }
+
+                      setState(() {});
+                    },
+                  ),
+                  const SizedBox(height: 15),
                   ListView.separated(
-                    itemCount: details!.trophyes.length,
+                    itemCount: filterTrophyList.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (context, index) => const Divider(
@@ -121,7 +148,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                       thickness: 0.2,
                     ),
                     itemBuilder: (context, index) {
-                      var trophy = details!.trophyes[index];
+                      var trophy = filterTrophyList[index];
 
                       return TrophyTiles(
                         done: doneTrophy.contains(trophy.name),
