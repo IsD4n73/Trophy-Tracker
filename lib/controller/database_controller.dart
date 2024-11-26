@@ -17,8 +17,6 @@ class DatabaseController {
   static Future<List<String>> getDoneTrophy(String gameName) async {
     var store = StoreRef.main();
 
-    print("Salvataggio trofei in: $gameName");
-
     var encodedSource = (await store
             .record('$gameName-completedtrophy')
             .get(database) as String?) ??
@@ -35,8 +33,6 @@ class DatabaseController {
 
   static Future<void> markTrophyAsDone(
       TrophyModel trophy, String gameName) async {
-    print("mark as done in: ${trophy.name.replaceAll(" ", "")}");
-
     var store = StoreRef.main();
 
     var encodedSource = (await store

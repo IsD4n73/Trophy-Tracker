@@ -42,11 +42,7 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
-      print(newItems.maxPage);
-      print(pageKey);
-
       final isLastPage = pageKey >= newItems.maxPage;
-      print(isLastPage);
       if (isLastPage) {
         pagingController.appendLastPage(newItems.results);
       } else {

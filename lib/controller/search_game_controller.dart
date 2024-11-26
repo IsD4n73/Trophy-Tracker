@@ -38,7 +38,6 @@ class SearchGameController {
         ?.children;
 
     if (games == null) {
-      print("no games found");
       return null;
     }
 

@@ -85,7 +85,6 @@ class DetailsGameController {
           ?.trim();
 
       if (name != null && description != null) {
-        print(description);
         trophyes.add(
           TrophyModel(
             name,
