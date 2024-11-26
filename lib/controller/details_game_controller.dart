@@ -70,7 +70,9 @@ class DetailsGameController {
       var name = trophy.querySelector("a.title")?.innerText;
       var description = trophy
           .querySelector("table > tbody > tr:nth-child(2) > td:nth-child(2)")
-          ?.innerText
+          ?.innerHtml
+          ?.split('<br>')
+          .last
           .trim();
       var rarity = trophy.querySelector("center > span.typo-top")?.innerText;
       var image = trophy.querySelector("a > img")?.getAttribute("src");
@@ -83,6 +85,7 @@ class DetailsGameController {
           ?.trim();
 
       if (name != null && description != null) {
+        print(description);
         trophyes.add(
           TrophyModel(
             name,
