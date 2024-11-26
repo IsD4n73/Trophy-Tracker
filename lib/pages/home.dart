@@ -4,6 +4,7 @@ import 'package:trophy_tracker/controller/search_game_controller.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:trophy_tracker/model/search_model.dart';
 import 'package:trophy_tracker/pages/details.dart';
+import 'package:trophy_tracker/pages/widget/console_icons.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -167,11 +168,26 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                   subtitle: Center(
-                                    child: Text(
-                                      game.platform,
-                                      style: TextStyle(
-                                        backgroundColor: Colors.blue,
-                                        color: Colors.white,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ConsoleIcons(console: game.platform),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            game.platform,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
