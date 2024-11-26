@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:trophy_tracker/controller/search_game_controller.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     searchCount = "";
+    FlutterNativeSplash.remove();
 
     pagingController.addPageRequestListener((pageKey) async {
       if (!needToLoadOther) {
