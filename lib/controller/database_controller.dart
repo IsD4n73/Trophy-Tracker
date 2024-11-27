@@ -31,6 +31,22 @@ class DatabaseController {
     return doneTrophy.map((e) => e.name).toList();
   }
 
+  static Future<List<TrophyModel>> getPlatinumTrophy() async {
+    var store = StoreRef.main();
+
+    var encodedSource =
+        (await store.record('completedplatinum').get(database) as String?) ??
+            '{"list" : []}';
+
+    var trophyJson = jsonDecode(encodedSource);
+
+    List<TrophyModel> doneTrophy = List.from(trophyJson["list"])
+        .map((e) => TrophyModel.fromJson(e))
+        .toList();
+
+    return doneTrophy;
+  }
+
   static Future<void> markTrophyAsDone(
       TrophyModel trophy, String gameName) async {
     var store = StoreRef.main();
@@ -40,9 +56,18 @@ class DatabaseController {
             .get(database) as String?) ??
         '{"list" : []}';
 
+    var encodedPlatinum =
+        (await store.record('completedplatinum').get(database) as String?) ??
+            '{"list" : []}';
+
     var trophyJson = jsonDecode(encodedSource);
+    var platinumJson = jsonDecode(encodedPlatinum);
 
     List<TrophyModel> doneTrophy = List.from(trophyJson["list"])
+        .map((e) => TrophyModel.fromJson(e))
+        .toList();
+
+    List<TrophyModel> donePlatinum = List.from(platinumJson["list"])
         .map((e) => TrophyModel.fromJson(e))
         .toList();
 
@@ -53,6 +78,19 @@ class DatabaseController {
     }
 
     doneTrophy.add(trophy);
+
+    if (trophy.level == TrophyLevel.platinum) {
+      donePlatinum.add(trophy);
+
+      var jsonedPlatinum = {
+        "list": donePlatinum.map((e) => e.toJson()).toList()
+      };
+
+      await store
+          .record('completedplatinum')
+          .put(database, jsonEncode(jsonedPlatinum));
+    }
+
     var jsoned = {"list": doneTrophy.map((e) => e.toJson()).toList()};
 
     await store
@@ -69,18 +107,33 @@ class DatabaseController {
             .get(database) as String?) ??
         '{"list" : []}';
 
+    var encodedPlatinum =
+        (await store.record('completedplatinum').get(database) as String?) ??
+            '{"list" : []}';
+
     var trophyJson = jsonDecode(encodedSource);
+    var platinumJson = jsonDecode(encodedPlatinum);
 
     List<TrophyModel> doneTrophy = List.from(trophyJson["list"])
         .map((e) => TrophyModel.fromJson(e))
         .toList();
 
+    List<TrophyModel> donePlatinum = List.from(platinumJson["list"])
+        .map((e) => TrophyModel.fromJson(e))
+        .toList();
+
     doneTrophy.removeWhere((element) => element.name == trophy.name);
+    donePlatinum.removeWhere((element) => element.name == trophy.name);
 
     var jsoned = {"list": doneTrophy.map((e) => e.toJson()).toList()};
+    var jsonedPlatinum = {"list": donePlatinum.map((e) => e.toJson()).toList()};
 
     await store
         .record('$gameName-completedtrophy')
         .put(database, jsonEncode(jsoned));
+
+    await store
+        .record('completedplatinum')
+        .put(database, jsonEncode(jsonedPlatinum));
   }
 }

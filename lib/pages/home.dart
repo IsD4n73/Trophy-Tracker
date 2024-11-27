@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:trophy_tracker/controller/database_controller.dart';
 import 'package:trophy_tracker/controller/search_game_controller.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:trophy_tracker/model/search_model.dart';
+import 'package:trophy_tracker/model/trophy_model.dart';
 import 'package:trophy_tracker/pages/details.dart';
 import 'package:trophy_tracker/pages/widget/console_icons.dart';
+import 'package:trophy_tracker/pages/widget/platinum_recap.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   TextEditingController search = TextEditingController();
   bool needToLoadOther = true;
   String searchCount = "";
+  List<TrophyModel> platinums = [];
   final PagingController<int, SearchModel> pagingController =
       PagingController(firstPageKey: 0);
 
@@ -27,6 +31,14 @@ class _HomePageState extends State<HomePage> {
 
     searchCount = "";
     FlutterNativeSplash.remove();
+
+    Future.delayed(
+      Duration.zero,
+      () async {
+        platinums = await DatabaseController.getPlatinumTrophy();
+        setState(() {});
+      },
+    );
 
     pagingController.addPageRequestListener((pageKey) async {
       if (!needToLoadOther) {
@@ -46,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       }
 
       final isLastPage = pageKey >= newItems.maxPage;
-      if (isLastPage) {
+      if (isLastPage || newItems.maxPage == 1) {
         pagingController.appendLastPage(newItems.results);
       } else {
         final nextPageKey = pageKey++;
@@ -66,6 +78,9 @@ class _HomePageState extends State<HomePage> {
     BotToast.showLoading();
     pagingController.itemList = null;
     var searchDetails = await SearchGameController.search(search.text, 1);
+    platinums = await DatabaseController.getPlatinumTrophy();
+    pagingController.itemList = [];
+    searchCount = '';
     BotToast.closeAllLoading();
 
     if (searchDetails == null) {
@@ -75,6 +90,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     searchCount = searchDetails.resultCount;
+    print(searchDetails.maxPage);
 
     if (searchDetails.maxPage == 1) {
       needToLoadOther = false;
@@ -119,18 +135,8 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 15),
             pagingController.itemList == null
-                ? Column(
-                    children: [
-                      const SizedBox(height: 100),
-                      Text("POWERED BY PSNProfiles.com"),
-                      const SizedBox(height: 20),
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(
-                          "https://pbs.twimg.com/profile_images/676408953287278593/DmVW8OUU_400x400.png",
-                        ),
-                      ),
-                    ],
+                ? PlatinumRecap(
+                    platinumTrophys: platinums,
                   )
                 : Flexible(
                     child: PagedListView<int, SearchModel>(

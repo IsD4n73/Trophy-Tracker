@@ -76,6 +76,10 @@ class DetailsGameController {
           .trim();
       var rarity = trophy.querySelector("center > span.typo-top")?.innerText;
       var image = trophy.querySelector("a > img")?.getAttribute("src");
+      var level = trophy
+          .querySelector("center > img")
+          ?.getAttribute("alt")
+          ?.toLowerCase();
       var type = baseUrl +
           (trophy.querySelector("center > img")?.getAttribute("src") ?? "");
 
@@ -93,6 +97,7 @@ class DetailsGameController {
             image ?? "",
             rarity ?? "N/A",
             //removeAllHtmlTags(guide ?? ""),
+            TrophyModel.getLevel(level ?? ''),
             guide ?? "",
           ),
         );
