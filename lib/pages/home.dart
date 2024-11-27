@@ -90,8 +90,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     searchCount = searchDetails.resultCount;
-    print(searchDetails.maxPage);
-
     if (searchDetails.maxPage == 1) {
       needToLoadOther = false;
       pagingController.appendLastPage(searchDetails.results);

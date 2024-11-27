@@ -56,7 +56,7 @@ class AlertController {
                   width: 30,
                   height: 30,
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 15),
               ],
             ),
           );
