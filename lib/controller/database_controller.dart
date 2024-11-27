@@ -4,6 +4,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:trophy_tracker/model/trophy_model.dart';
 
+import 'alert_controller.dart';
+
 class DatabaseController {
   static late Database database;
 
@@ -76,6 +78,9 @@ class DatabaseController {
     if (alreadyAdded.contains(trophy.name)) {
       return;
     }
+
+    AlertController.showTrophyAlert(
+        trophy.name, trophy.description, trophy.level);
 
     doneTrophy.add(trophy);
 
