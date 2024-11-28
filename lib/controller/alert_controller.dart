@@ -32,7 +32,7 @@ class AlertController {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  width: constraints.maxWidth / 1.5,
+                  width: constraints.maxWidth / 2,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

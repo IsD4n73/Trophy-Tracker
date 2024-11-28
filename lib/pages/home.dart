@@ -7,6 +7,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:trophy_tracker/model/search_model.dart';
 import 'package:trophy_tracker/model/trophy_model.dart';
 import 'package:trophy_tracker/pages/details.dart';
+import 'package:trophy_tracker/pages/widget/activable_scroll_view.dart';
 import 'package:trophy_tracker/pages/widget/console_icons.dart';
 import 'package:trophy_tracker/pages/widget/platinum_recap.dart';
 
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
       if (isLastPage || newItems.maxPage == 1) {
         pagingController.appendLastPage(newItems.results);
       } else {
-        final nextPageKey = pageKey++;
+        final nextPageKey = pageKey + 1;
         pagingController.appendPage(newItems.results, nextPageKey);
       }
       BotToast.closeAllLoading();
@@ -108,104 +109,109 @@ class _HomePageState extends State<HomePage> {
         title: Text(searchCount != "" ? searchCount : "Trophy Tracker"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            TextField(
-              controller: search,
-              onSubmitted: (value) async {
-                await _search();
-              },
-              decoration: InputDecoration(
-                labelText: "Search Games",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () async {
-                    await _search();
-                  },
-                  icon: const Icon(Icons.search),
+      body: ActivableScrollView(
+        active: (pagingController.itemList == null),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            children: [
+              const SizedBox(height: 15),
+              TextField(
+                controller: search,
+                onSubmitted: (value) async {
+                  await _search();
+                },
+                decoration: InputDecoration(
+                  labelText: "Search Games",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () async {
+                      await _search();
+                    },
+                    icon: const Icon(Icons.search),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 15),
-            pagingController.itemList == null
-                ? PlatinumRecap(
-                    platinumTrophys: platinums,
-                  )
-                : Flexible(
-                    child: PagedListView<int, SearchModel>(
-                      shrinkWrap: true,
-                      pagingController: pagingController,
-                      builderDelegate: PagedChildBuilderDelegate<SearchModel>(
-                        itemBuilder: (context, game, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        GameDetailsPage(game: game),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                      game.background,
+              const SizedBox(height: 15),
+              pagingController.itemList == null
+                  ? PlatinumRecap(
+                      platinumTrophys: platinums,
+                    )
+                  : Flexible(
+                      child: PagedListView<int, SearchModel>(
+                        shrinkWrap: true,
+                        pagingController: pagingController,
+                        builderDelegate: PagedChildBuilderDelegate<SearchModel>(
+                          itemBuilder: (context, game, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          GameDetailsPage(game: game),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                        game.background,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    game.title,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      backgroundColor: Colors.black45,
+                                  child: ListTile(
+                                    title: Text(
+                                      game.title,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        backgroundColor: Colors.black45,
+                                      ),
                                     ),
-                                  ),
-                                  subtitle: Center(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 5,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          ConsoleIcons(console: game.platform),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            game.platform,
-                                            style: TextStyle(
-                                              color: Colors.white,
+                                    subtitle: Center(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ConsoleIcons(
+                                                console: game.platform),
+                                            const SizedBox(width: 5),
+                                            Text(
+                                              game.platform,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );
