@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -31,7 +32,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     searchCount = "";
-    FlutterNativeSplash.remove();
+    if (!kIsWeb) {
+      FlutterNativeSplash.remove();
+    }
 
     Future.delayed(
       Duration.zero,
